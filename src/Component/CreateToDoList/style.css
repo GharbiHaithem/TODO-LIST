@@ -40,3 +40,15 @@
   background-image: linear-gradient(to right, #0d6efd,#ffc107);
    
  }
+ .x{
+
+  width: 80%;
+  margin: 0 auto;
+ }
+ .x button{
+ margin-top: 10px;
+  padding: 5px;
+ }
+ .x input{
+  padding: 20px;
+ }

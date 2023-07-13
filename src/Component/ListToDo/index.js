@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import './style.css'
 import {MdOutlineCancel} from 'react-icons/md'
 import { useDrag, useDrop } from 'react-dnd'
-const ListToDo = ({tasks,setTasks}) => {
+import {TbEdit} from 'react-icons/tb'
+const ListToDo = ({tasks,setTasks,setTask,task,isScreenSmall, setIsScreenSmall}) => {
     const[todos,setTodos] = useState([])
     const[inProgress,setInProgress]=useState([])
     const[closed,setClosed] = useState([])
@@ -21,12 +22,12 @@ const ListToDo = ({tasks,setTasks}) => {
     console.log(closed && closed?.length)
     const statues = ['todos','inProgress','closed']
     return (
-        <div className='list-wrapper'>
-           
+        <div className={`${isScreenSmall ? "list-wrapper-xsize" :  "list-wrapper"}`}>
+         
             {
                 statues.map((status,index)=>{
                     return(
-                       <Section key={index} tasks={tasks} setTasks={setTasks} status={status} todos={todos} inProgress={inProgress} closed={closed} />
+                       <Section key={index} task={task} tasks={tasks} setTasks={setTasks} status={status} todos={todos} inProgress={inProgress} closed={closed} />
    
                     )
                 })
@@ -39,7 +40,7 @@ const ListToDo = ({tasks,setTasks}) => {
 
 export default ListToDo
 
-const Section = ({status,tasks,setTasks,todos,inProgress,closed}) =>{
+const Section = ({status,tasks,setTasks,todos,inProgress,closed,task ,setTask}) =>{
 
     const [{ isOver }, drop] = useDrop(() => ({
 		
@@ -84,6 +85,7 @@ const Section = ({status,tasks,setTasks,todos,inProgress,closed}) =>{
         }
     return (<>
     <div style={{background:`${isOver ? '#eee' : ''}`}} ref={drop}>
+     
         <Header bg={bg} text={text} w={count} />
         {
           taskToMap &&  taskToMap?.length > 0 && taskToMap?.map((task)=>(<Tasks key={task.id} task={task} tasks={tasks} setTasks={setTasks}  />))
@@ -119,11 +121,43 @@ const Tasks = ({tasks,setTasks,task})=>{
      
        
     }
+    const[onUpdate,setOnUpdate] = useState(false)
+    const[taskUpdated,setTaskUpdated] = useState({
+        id:task && task?.id,
+        name:task.name,
+        status:task.status
+    })
+    console.log(taskUpdated)
+    const handleUpdate =(task)=>{
+  
+     console.log(task)
+     setTasks((prev) => {
+        const updatedTasks = prev.map((x) => {
+          if (x.id === task.id) {
+            return { ...x, id: task.id,name:task.name,status:task.status }; // Modification de la propriété "task"
+          }
+          return x; // Renvoie l'élément sans modification s'il ne correspond pas à l'ID
+        });
+        
+        return updatedTasks;
+      });
+localStorage.setItem('tasks',JSON.stringify(tasks))
+setOnUpdate(false)
+    }
     return(<>
     <div ref={drag} className={`p-4 m-2 d-flex justify-content-between ${isDragging ? "bg-dark text-light opacity-50" : "text-dark"}`} style={{boxShadow:'0 0 10px rgb(114, 110, 110)'}}>
     
-         <p className='position-relative'>  { (task.name)}</p>
+        {onUpdate ? <div className='d-flex flex-column gap-10' style={{width:'70%'}}>
+
+            <input className='custom-input form-control' type='text'  name='taskUpdate' value={taskUpdated.name} onChange={(e)=>setTaskUpdated({...taskUpdated,id:task.id,status:task.status,name:e.target.value})}  /> <button onClick={()=>handleUpdate(taskUpdated)} className='d-blcck mx-auto p-1 btn-sm btn-success
+            '>Save</button>
+        </div> :  <p className='position-relative'>  { (task.name)}</p> } 
+
+        <div>
         <MdOutlineCancel className='fs-4' onClick={()=>handleDelete(task.id)} />      
+        <TbEdit className='fs-4 mx-3' onClick={()=>   setOnUpdate(!onUpdate)   } />
+        
+        </div>
       
     </div>
     </>)

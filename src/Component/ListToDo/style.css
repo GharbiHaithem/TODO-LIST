@@ -7,6 +7,27 @@
     margin-right: auto;
 
 }
+.list-wrapper-xsize{
+   margin-top: 50px;
+}
 .colorP{
     background-color: #000000;
 }
+.custom-input {
+    /* Remplacez "red" par la couleur de bordure souhaitée */
+     padding: 5px;
+     font-size: 12px;
+     color: rgb(88, 88, 92);
+     border-color: #ccc8c8;
+     outline: none; 
+     width: 100%;
+     border-radius: 5px;
+     /* Remplacez "blue" par la couleur du texte souhaitée */
+   }
+   
+   .custom-input::placeholder {
+     color: gray; /* Remplacez "gray" par la couleur du texte de l'invite souhaitée */
+   }
+   .gap-10{
+    gap:10px
+   }

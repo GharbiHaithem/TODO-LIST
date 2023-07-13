@@ -8,6 +8,30 @@ import { useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 function App() {
+  const [isScreenSmall, setIsScreenSmall] = useState(false);
+  useEffect(() => {
+      const handleResize = () => {
+          const isSmall = window.matchMedia("(max-width: 600px)").matches;
+          setIsScreenSmall(isSmall);
+      };
+
+      // Ajoute un écouteur d'événement pour détecter les changements de taille d'écran
+      window.addEventListener("resize", handleResize);
+
+      // Vérifie la taille de l'écran au chargement initial de la page
+      handleResize();
+      console.log(isScreenSmall)
+      // Nettoie l'écouteur d'événement lorsque le composant est démonté
+      return () => {
+          window.removeEventListener("resize", handleResize);
+      };
+
+  }, [isScreenSmall]);
+  const[task,setTask] = useState({
+    id : "",
+    name: "",
+    status:"todos"
+})
   const[tasks,setTasks] = useState([])
   useEffect(()=>{
     setTasks(JSON.parse(localStorage.getItem('tasks')))
@@ -27,8 +51,9 @@ draggable
 pauseOnHover
 theme="dark"
 />
-    <CreateToDoList tasks={tasks} setTasks={setTasks} />
-    <ListToDo tasks={tasks} setTasks={setTasks}/>
+    <CreateToDoList task={task} isScreenSmall={isScreenSmall} setIsScreenSmall={setIsScreenSmall} setTask={setTask} tasks={tasks} setTasks={setTasks} />
+    <ListToDo task={task} setTask={setTask} tasks={tasks} setTasks={setTasks} isScreenSmall={isScreenSmall} setIsScreenSmall={setIsScreenSmall} />
+  
     </DndProvider>
 
   );
