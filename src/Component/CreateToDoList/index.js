@@ -13,7 +13,8 @@ const CreateToDoList = ({tasks,setTasks}) => {
     const handleSubmit=(e)=>{
         e.preventDefault()
         setTasks((prev)=>{
-            return [...prev,task]
+        
+            return [...prev || [],task]
         })
         setTask({...task,id:"",name:""})
         localStorage.setItem("tasks",JSON.stringify(tasks))

@@ -8,17 +8,17 @@ const ListToDo = ({tasks,setTasks}) => {
     const[closed,setClosed] = useState([])
     useEffect(()=>{
         console.log(tasks)
-    const  fTodos = tasks.filter((task)=>task.status === "todos")
-    const  fInProgress = tasks.filter((task)=>task.status === "inProgress")
+    const  fTodos =tasks && tasks.filter((task)=>task.status === "todos")
+    const  fInProgress =tasks && tasks.filter((task)=>task.status === "inProgress")
     
-    const fClosed = tasks.filter((task)=>task.status === "closed")
+    const fClosed =tasks &&  tasks.filter((task)=>task.status === "closed")
     setTodos(fTodos)
     setInProgress(fInProgress)
     setClosed(fClosed)
     },[tasks])
-    console.log(todos.length)
-    console.log(inProgress.length)
-    console.log(closed.length)
+    console.log(todos && todos?.length)
+    console.log(inProgress && inProgress?.length)
+    console.log(closed && closed?.length)
     const statues = ['todos','inProgress','closed']
     return (
         <div className='list-wrapper'>
@@ -86,7 +86,7 @@ const Section = ({status,tasks,setTasks,todos,inProgress,closed}) =>{
     <div style={{background:`${isOver ? '#eee' : ''}`}} ref={drop}>
         <Header bg={bg} text={text} w={count} />
         {
-            taskToMap.length > 0 && taskToMap?.map((task)=>(<Tasks key={task.id} task={task} tasks={tasks} setTasks={setTasks}  />))
+          taskToMap &&  taskToMap?.length > 0 && taskToMap?.map((task)=>(<Tasks key={task.id} task={task} tasks={tasks} setTasks={setTasks}  />))
         } 
     </div>
     </>)
